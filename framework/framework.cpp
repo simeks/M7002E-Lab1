@@ -2,7 +2,9 @@
 
 #include "framework.h"
 
+#ifndef PLATFORM_MACOSX
 #include <GL/glew.h>
+#endif
 
 #include <SDL.h>
 #include <SDL_opengl.h>
@@ -31,6 +33,7 @@ Framework::Framework()
 	SDL_GL_CreateContext(_window);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set the clear color to black
 
+#ifndef PLATFORM_MACOSX // There's no real use for GLEW on OSX so we skip it.
 	// Initialize glew, which handles opengl extensions
 	GLenum err = glewInit(); 
 	if(err != GLEW_OK)
@@ -38,7 +41,8 @@ Framework::Framework()
 		debug::Printf("[Error] glewInit failed: %s\n", glewGetErrorString(err));
 		return;
 	}
-	fprintf(stdout, "GLEW: Using version %s\n", glewGetString(GLEW_VERSION));
+	debug::Printf(stdout, "GLEW: Using version %s\n", glewGetString(GLEW_VERSION));
+#endif
 
 	_initialized = true;
 }
