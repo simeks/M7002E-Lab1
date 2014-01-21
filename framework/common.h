@@ -8,7 +8,7 @@
 
 #endif
 
-#include <iostream>
+#include <stdint.h>
 
 #include "debug.h"
 

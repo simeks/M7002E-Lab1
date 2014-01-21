@@ -1,5 +1,6 @@
 #include <framework/common.h>
-#include <framework/framework.h>
+#include "lab_app.h"
+
 
 #ifdef PLATFORM_WIN32
 int WINAPI WinMain(HINSTANCE , HINSTANCE , LPSTR , int )
@@ -7,7 +8,7 @@ int WINAPI WinMain(HINSTANCE , HINSTANCE , LPSTR , int )
 int main(int argc, char* argv[])
 #endif
 {
-	Framework fw;
-	fw.Run();
+	Lab1App app;
+	app.Run();
 }
 
