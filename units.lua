@@ -6,6 +6,7 @@ StaticLibrary {
 		CPPPATH = { 
 			"framework",
 			".",
+			"dependencies/SDL2-2.0.1/include",
 		}, 
 	},
 
@@ -27,11 +28,10 @@ Program {
 		CPPPATH = { 
 			"lab1",
 			".",
-			"dependencies/SDL2-2.0.1/include",
 		}, 
 		LIBPATH = {
 			"dependencies/SDL2-2.0.1/lib/x86",
-		}
+		},
 		PROGOPTS = {
 			{ "/SUBSYSTEM:WINDOWS"; Config = { "win32-*-*" } },
 		}
@@ -62,4 +62,4 @@ Program {
 		},
 }
 
-Default "Space"
+Default "Lab1"
