@@ -7,6 +7,7 @@ StaticLibrary {
 			"framework",
 			".",
 			"dependencies/SDL2-2.0.1/include",
+			"dependencies/glew/include",
 		}, 
 	},
 
@@ -28,9 +29,11 @@ Program {
 		CPPPATH = { 
 			"lab1",
 			".",
+			"dependencies/glew/include",
 		}, 
 		LIBPATH = {
 			"dependencies/SDL2-2.0.1/lib/x86",
+			"dependencies/glew/lib/Release/Win32",
 		},
 		PROGOPTS = {
 			{ "/SUBSYSTEM:WINDOWS"; Config = { "win32-*-*" } },
@@ -57,6 +60,8 @@ Program {
 				"comdlg32.lib", 
 				"advapi32.lib", 
 				"SDL2.lib",
+				"opengl32.lib",
+				"glew32.lib",
 				Config = { "win32-*-*", "win64-*-*" } 
 			}
 		},
