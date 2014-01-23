@@ -14,10 +14,10 @@ Primitive PrimitiveFactory::CreatePyramid(const Vec3& size, const Color& color)
 	Primitive primitive;
 	primitive.draw_mode = GL_LINE_STRIP;
 
-	// We can draw the outlines of the 3d pyramid with 10 vertices using GL_LINE_STRIP
-	primitive.vertex_count = 10; 
+	// We can draw the outlines of the 3d pyramid with 11 vertices using GL_LINE_STRIP
+	primitive.vertex_count = 11; 
 
-	float vertex_data[10*3]; // 6 vertices, 3 floats each (x, y, z)
+	float vertex_data[11*3]; // 6 vertices, 3 floats each (x, y, z)
 
 	int i = 0;
 
@@ -26,29 +26,30 @@ Primitive PrimitiveFactory::CreatePyramid(const Vec3& size, const Color& color)
 	vertex_data[i++] = size.x;	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f; // bottom 2
 	vertex_data[i++] = size.x;	vertex_data[i++] = 0.0f;	vertex_data[i++] = size.z; // bottom 3
 	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f;	vertex_data[i++] = size.z; // bottom 4
+	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f; // bottom 1
 
-	// Side 4 (bottom 4 -> Top)
+	// Side 4 (bottom 1 -> Top)
 	vertex_data[i++] = size.x * 0.5f; vertex_data[i++] = size.y; vertex_data[i++] = size.z * 0.5f; // Top
 
-	// Side 3 (Top -> bottom 3 -> Top)
-	vertex_data[i++] = size.x;	vertex_data[i++] = 0.0f;	vertex_data[i++] = size.z; // bottom 3
-	vertex_data[i++] = size.x * 0.5f; vertex_data[i++] = size.y; vertex_data[i++] = size.z * 0.5f; // Top
-
-	// Side 2 (Top -> bottom 2 -> Top)
+	// Side 3 (Top -> bottom 2 -> Top)
 	vertex_data[i++] = size.x;	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f; // bottom 2
 	vertex_data[i++] = size.x * 0.5f; vertex_data[i++] = size.y; vertex_data[i++] = size.z * 0.5f; // Top
+
+	// Side 2 (Top -> bottom 3 -> Top)
+	vertex_data[i++] = size.x;	vertex_data[i++] = 0.0f;	vertex_data[i++] = size.z; // bottom 3
+	vertex_data[i++] = size.x * 0.5f; vertex_data[i++] = size.y; vertex_data[i++] = size.z * 0.5f; // Top
 	
-	// Side 1 (Top -> bottom 1)
-	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f; // bottom 1
+	// Side 1 (Top -> bottom 4)
+	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f;	vertex_data[i++] = size.z; // bottom 4
 
 	// Create the vertex buffer, possible optimization would be to create a shared vertex buffer for the rectangles
 	//	rather than creating a new one for each rectangle.
 	primitive.vertex_buffer = CreateVertexBuffer(3*primitive.vertex_count*sizeof(float), vertex_data);
 	
-	float color_data[10*4]; // 6 vertices, 4 floats each (r, g, b, a)
+	float color_data[11*4]; // 6 vertices, 4 floats each (r, g, b, a)
 	
 	// Fill the color data, each vertex will have the same color.
-	for(i = 0; i < 10; ++i)
+	for(i = 0; i < 11; ++i)
 	{
 		color_data[4*i+0] = color.r; 
 		color_data[4*i+1] = color.g; 
@@ -218,7 +219,7 @@ Primitive PrimitiveFactory::CreateCube(const Vec3& size, const Color& color)
 	primitive.vertex_buffer = CreateVertexBuffer(3*primitive.vertex_count*sizeof(float), vertex_data);
 	
 	float color_data[36*4]; // 6 vertices, 4 floats each (r, g, b, a)
-	
+
 	// Fill the color data, each vertex will have the same color.
 	for(i = 0; i < 36; ++i)
 	{
@@ -226,6 +227,7 @@ Primitive PrimitiveFactory::CreateCube(const Vec3& size, const Color& color)
 		color_data[4*i+1] = color.g; 
 		color_data[4*i+2] = color.b; 
 		color_data[4*i+3] = color.a; 
+			
 	}
 	
 	// Create the color buffer, this could (and probably should) be interleaved with the other vertex buffer but we keep it simple.
