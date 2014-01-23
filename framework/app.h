@@ -11,11 +11,17 @@ public:
 
 	void Run();
 
+	/// @brief Specifies the clear color for when clearing the back buffer. 
+	void SetClearColor(float r, float g, float b, float a);
+
 protected:
 
 	/// @return True if initialization was successful, false if not.
 	virtual bool Initialize() = 0;
 	virtual void Shutdown() = 0;
+
+	/// @brief Callback invoked once every frame to let the application perform rendering.
+	virtual void Render() = 0;
 
 	/// @brief Initializes SDL and creates a new primary window for rendering.
 	/// @return True if initialization was successful, false if not.
