@@ -166,7 +166,7 @@ Primitive PrimitiveFactory::CreateCube(const Vec3& size, const Color& color)
 	// The cube consists of 12 lines => 24 vertices.
 	primitive.vertex_count = 24; 
 
-	float vertex_data[24*3]; // 6 vertices, 3 floats each (x, y, z)
+	float vertex_data[24*3]; // 24 vertices, 3 floats each (x, y, z)
 	int i = 0;
 
 	Vec3 half_size;
@@ -236,50 +236,35 @@ Primitive PrimitiveFactory::CreateCube(const Vec3& size, const Color& color)
 
 	return primitive;
 }
-Primitive PrimitiveFactory::CreateSphere(float radius, const Color& color)
+Primitive PrimitiveFactory::CreateFilledCircle(float radius, const Color& color)
 {
-	static const uint32_t line_count = 64; // Number of lines per circle
+	static const uint32_t line_count = 32; // Number of segments per circle
 
 	Primitive primitive;
-	primitive.draw_mode = GL_LINE_STRIP;
-	primitive.vertex_count = (line_count+1); 
+	primitive.draw_mode = GL_TRIANGLE_FAN;
+	primitive.vertex_count = (line_count+1); // +1 for the center vertex 
 
 	float vertex_data[(line_count+1) * 3];
 	int vertex_idx = 0;
 
-	//// X-axis
-	//for(int i = 0; i <= line_count; ++i)
-	//{
-	//	float rad = i * (2 * (float)MATH_PI) / line_count;
-	//	vertex_data[vertex_idx++] = radius;
-	//	vertex_data[vertex_idx++] = cosf(rad) * radius;
-	//	vertex_data[vertex_idx++] = sinf(rad) * radius;
+	vertex_data[vertex_idx++] = 0.0f; // Center x
+	vertex_data[vertex_idx++] = 0.0f; // Center y
+	vertex_data[vertex_idx++] = 0.0f; // Center z
 
-	//}
-	//
-	//// Y-axis
-	//for(int i = 0; i <= line_count; ++i)
-	//{
-	//	float rad = i * (2 * (float)MATH_PI) / line_count;
-	//	vertex_data[vertex_idx++] = cosf(rad) * radius;
-	//	vertex_data[vertex_idx++] = radius;
-	//	vertex_data[vertex_idx++] = sinf(rad) * radius;
-	//}
-
-	// Z-axis
-	for(int i = 0; i <= line_count; ++i)
+	for(int i = 0; i < line_count; ++i)
 	{
-		float rad = i * (2 * (float)MATH_PI) / line_count;
+		float rad = i * (2 * (float)MATH_PI) / (line_count-1);
 		vertex_data[vertex_idx++] = cosf(rad) * radius;
 		vertex_data[vertex_idx++] = sinf(rad) * radius;
-		vertex_data[vertex_idx++] = radius;
+		vertex_data[vertex_idx++] = 0.0f;
 	}
+	
 
 	// Create the vertex buffer, possible optimization would be to create a shared vertex buffer for the rectangles
 	//	rather than creating a new one for each rectangle.
 	primitive.vertex_buffer = CreateVertexBuffer(3*primitive.vertex_count*sizeof(float), vertex_data);
 	
-	float color_data[(line_count+1) * 4]; // 6 vertices, 4 floats each (r, g, b, a)
+	float color_data[(line_count+1) * 4]; // Color data for each vertice (r, g, b, a)
 	
 	// Fill the color data, each vertex will have the same color.
 	for(int i = 0; i < (line_count+1); ++i)
@@ -295,7 +280,13 @@ Primitive PrimitiveFactory::CreateSphere(float radius, const Color& color)
 
 	return primitive;
 }
+void PrimitiveFactory::DestroyPrimitive(Primitive& primitive)
+{
+	// Delete the buffers that the primitive holds
 
+	glDeleteBuffers(1, &primitive.vertex_buffer);
+	glDeleteBuffers(1, &primitive.color_buffer);
+}
 GLuint PrimitiveFactory::CreateVertexBuffer(uint32_t size, void* vertex_data)
 {
 	// Vertex buffer objects in opengl are objects that allows us to upload data directly to the GPU.

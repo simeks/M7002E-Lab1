@@ -9,6 +9,7 @@ public:
 	App();
 	virtual ~App();
 
+	/// Runs the application, this will not return until the application stops.
 	void Run();
 
 	/// @brief Specifies the clear color for when clearing the back buffer. 
@@ -24,7 +25,7 @@ protected:
 	virtual void Shutdown() = 0;
 
 	/// @brief Callback invoked once every frame to let the application perform rendering.
-	virtual void Render() = 0;
+	virtual void Render(float dtime) = 0;
 
 	/// @brief Initializes SDL and creates a new primary window for rendering.
 	/// @return True if initialization was successful, false if not.
@@ -36,6 +37,7 @@ protected:
 	SDL_Window* _window;
 	bool _running; // Specifies whether the framework is currently running, setting this to false will exit the application.
 
+	uint32_t _last_tick;
 };
 
 

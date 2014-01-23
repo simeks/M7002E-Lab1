@@ -28,7 +28,9 @@ protected:
 	void Shutdown();
 
 	/// @brief Callback invoked once every frame to let the application perform rendering.
-	void Render();
+	void Render(float dtime);
+
+	/// @brief Renders the scene, this does not include any viewport setup, etc, that may be needed.
 	void RenderScene();
 	
 private:
@@ -40,9 +42,10 @@ private:
 	Primitive _cube_primitive;
 	Primitive _sphere_primitive;
 
-
 	Viewport _left_viewport;
 	Viewport _right_viewport;
+
+	float _scene_angle;
 };
 
 

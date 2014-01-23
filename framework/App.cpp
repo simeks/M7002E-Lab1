@@ -2,10 +2,6 @@
 
 #include "App.h"
 
-#ifndef PLATFORM_MACOSX
-#include <GL/glew.h>
-#endif
-
 #include <SDL.h>
 #include <SDL_opengl.h>
 
@@ -28,16 +24,21 @@ void App::Run()
 	SDL_Event evt;
 	while(_running)
 	{
+		uint32_t current_tick = SDL_GetTicks();
+		float dtime = (float)(current_tick - _last_tick)*0.001f;
+		_last_tick = current_tick;
+
+		// Poll SDL events.
 		while(SDL_PollEvent(&evt))
 		{
-			if(evt.type == SDL_QUIT)
+			if(evt.type == SDL_QUIT) // User closed the main window.
 				_running = false;
 		}
 
 		// Clear the color and depth buffer.
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		Render();
+		Render(dtime);
 
 		// Swap buffers for our main window.
 		SDL_GL_SwapWindow(_window);
@@ -57,11 +58,14 @@ void App::SetWindowTitle(const char* title)
 
 bool App::InitializeSDL(uint32_t window_width, uint32_t window_height)
 {
+	// Initialize SDL, specifying to only initialize the video subsystem.
 	if(SDL_Init(SDL_INIT_VIDEO) != 0)
 	{
 		debug::Printf("[Error] SDL_Init failed: %s\n", SDL_GetError());
 		return false;
 	}
+
+	_last_tick = SDL_GetTicks();
 
 #ifdef PLATFORM_MACOSX
 	// Hint at what opengl version to use on osx.

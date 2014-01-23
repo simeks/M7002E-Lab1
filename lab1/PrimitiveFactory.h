@@ -1,7 +1,7 @@
 #ifndef __PRIMITIVEFACTORY_H__
 #define __PRIMITIVEFACTORY_H__
 
-
+/// @brief Struct representing a primitive that can be rendered.
 struct Primitive
 {
 	GLuint vertex_buffer; // VBO holding the vertex positions. Expecting the element format: float x, y, z
@@ -22,6 +22,7 @@ struct Color
 	float r, g, b, a;
 };
 
+/// @brief Factory used for creating primitives that can be rendered onto the scene.
 class PrimitiveFactory
 {
 public:
@@ -48,10 +49,14 @@ public:
 	/// @param color The color of the cube.
 	Primitive CreateCube(const Vec3& size, const Color& color);
 
-	/// @brief Creates an outlined sphere.
-	/// @param size The size of the cube.
-	/// @param color The color of the cube.
-	Primitive CreateSphere(float radius, const Color& color);
+	/// @brief Creates a filled circle.
+	/// @param radius The radius of the circle.
+	/// @param color The color of the circle.
+	Primitive CreateFilledCircle(float radius, const Color& color);
+
+	/// @brief Destroys the specified primitive, releasing any resources it haves.
+	void DestroyPrimitive(Primitive& primitive);
+
 
 private:
 	/// @brief Creates a new vertex buffer.

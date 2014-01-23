@@ -2,7 +2,7 @@
 #include "App.h"
 
 
-Lab1App::Lab1App()
+Lab1App::Lab1App() : _scene_angle(0.0f)
 {
 }
 Lab1App::~Lab1App()
@@ -12,7 +12,7 @@ Lab1App::~Lab1App()
 void Lab1App::DrawPrimitive(const Primitive& primitive, const Vec3& position, const Vec3& rotation)
 {
 	glEnableClientState(GL_VERTEX_ARRAY); // Enables the use of the vertex array specified in our vertex buffer.
-	glEnableClientState(GL_COLOR_ARRAY);
+	glEnableClientState(GL_COLOR_ARRAY); // Enables the use of the color array specified in our vertex color buffer.
 
 	// Binds the vertex buffer for use.
 	glBindBuffer(GL_ARRAY_BUFFER, primitive.vertex_buffer); 
@@ -51,13 +51,13 @@ void Lab1App::DrawPrimitive(const Primitive& primitive, const Vec3& position, co
 	// Return the modelview matrix to its previous state
 	glPopMatrix();
 	
-	glDisableClientState(GL_COLOR_ARRAY);
+	glDisableClientState(GL_COLOR_ARRAY); // Disables the use of the color array.
 	glDisableClientState(GL_VERTEX_ARRAY); // Disables the use of the vertex array.
 }
 
 bool Lab1App::Initialize()
 {
-	uint32_t win_width = 800, win_height = 600;
+	uint32_t win_width = 1024, win_height = 768;
 
 	// Initialize SDL and create a 800x600 winodw for rendering.
 	if(!InitializeSDL(win_width, win_height))
@@ -80,19 +80,27 @@ bool Lab1App::Initialize()
 	_right_viewport.height = win_height;
 	
 
-	_pyramid_primitive = _primitive_factory.CreatePyramid(Vec3(100.0f, 100.0f, 100.0f), Color(1.0f, 0.0f, 0.0f));
-	_rectangle_primitive = _primitive_factory.CreateFilledRectangle(Vec2(200.0f, 200.0f), Color(0.0f, 0.0f, 1.0f));
-	_star_primitive = _primitive_factory.CreateFilledStar(Vec2(200.0f, 200.0f), Color(0.0f, 1.0f, 0.0f));
-	_cube_primitive = _primitive_factory.CreateCube(Vec3(100.0f, 100.0f, 100.0f), Color(1.0f, 0.0f, 1.0f));
-	_sphere_primitive = _primitive_factory.CreateSphere(100.0f, Color(1.0f, 1.0f, 1.0f));
+	_pyramid_primitive = _primitive_factory.CreatePyramid(Vec3(75.0f, 75.0f, 75.0f), Color(1.0f, 0.0f, 0.0f));
+	_rectangle_primitive = _primitive_factory.CreateFilledRectangle(Vec2(75.0f, 75.0f), Color(0.0f, 0.0f, 1.0f));
+	_star_primitive = _primitive_factory.CreateFilledStar(Vec2(75.0f, 75.0f), Color(0.0f, 1.0f, 0.0f));
+	_cube_primitive = _primitive_factory.CreateCube(Vec3(75.0f, 75.0f, 75.0f), Color(1.0f, 0.0f, 1.0f));
+	_sphere_primitive = _primitive_factory.CreateFilledCircle(75.0f, Color(0.0f, 1.0f, 1.0f));
 
 	return true;
 }
 void Lab1App::Shutdown()
 {
+	// Cleanup
+
+	_primitive_factory.DestroyPrimitive(_sphere_primitive);
+	_primitive_factory.DestroyPrimitive(_cube_primitive);
+	_primitive_factory.DestroyPrimitive(_star_primitive);
+	_primitive_factory.DestroyPrimitive(_rectangle_primitive);
+	_primitive_factory.DestroyPrimitive(_pyramid_primitive);
+
 	ShutdownSDL();
 }
-void Lab1App::Render()
+void Lab1App::Render(float dtime)
 {
 	// Reset the modelview matrix
 	glMatrixMode(GL_MODELVIEW);
@@ -100,34 +108,12 @@ void Lab1App::Render()
 	
 	// Render left viewport
 	{
-		// Setup projection matrix
-		glMatrixMode(GL_PROJECTION);
-
-		// Save previous matrix
-		glPushMatrix();
-		
-		glLoadIdentity();
-		gluPerspective(45.0, (double)_left_viewport.width/(double)_left_viewport.height, 1.0, -1000.0);
-		gluLookAt(0.0, 0.0, -550.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-
-
 		// Save previous viewport
 		glPushAttrib(GL_VIEWPORT_BIT); 
 		
 		// Set viewport attributes
 		glViewport(_left_viewport.x, _left_viewport.y, _left_viewport.width, _left_viewport.height);
 
-		// Draw the scene
-		RenderScene();
-
-		// Restore viewport
-		glPopAttrib();
-		// Restore projection matrix
-		glPopMatrix();
-	}
-
-	// Render right viewport
-	{
 		// Setup projection matrix
 		glMatrixMode(GL_PROJECTION);
 
@@ -135,34 +121,61 @@ void Lab1App::Render()
 		glPushMatrix();
 		
 		glLoadIdentity();
-		gluPerspective(45.0, (double)_left_viewport.width/(double)_left_viewport.height, 1.0, -1000.0);
-		gluLookAt(0.0, 0.0, -550.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+		
+		// Set the perspective, 45 degrees FOV, aspect ratio to match viewport, z range: [1.0, 1000.0]
+		gluPerspective(45.0, (double)_left_viewport.width/(double)_left_viewport.height, 1.0, 1000.0);
+		// Set the camera position to (0, 0, 400) and make it look at the center of the scene (0, 0, 0)
+		gluLookAt(0.0, 0.0, 400.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 
+		// Draw the scene
+		RenderScene();
+		
+		// Restore projection matrix
+		glPopMatrix();
+		// Restore viewport
+		glPopAttrib();
+	}
+
+	// Render right viewport
+	{
 		// Save previous viewport
 		glPushAttrib(GL_VIEWPORT_BIT); 
 		
 		// Set viewport attributes
 		glViewport(_right_viewport.x, _right_viewport.y, _right_viewport.width, _right_viewport.height);
 
+		// Setup projection matrix
+		glMatrixMode(GL_PROJECTION);
+		// Save previous matrix
+		glPushMatrix();
+		
+		glLoadIdentity();
+		// Set the perspective, 45 degrees FOV, aspect ratio to match viewport, z range: [1.0, 1000.0]
+		gluPerspective(45.0, (double)_left_viewport.width/(double)_left_viewport.height, 1.0, 1000.0);
+		
+		// Make the camera rotate around the scene
+		_scene_angle = _scene_angle + dtime * (float)MATH_HALF_PI; // PI/2 rad/s
+		// Set the camera position and make it rotate around the center of the scene (0,0,0)
+		gluLookAt(400*cos(_scene_angle), 0.0, 400.0*sin(_scene_angle), 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+
 		// Draw the scene
 		RenderScene();
-
-		// Restore viewport
-		glPopAttrib();
+		
 		// Restore projection matrix
 		glPopMatrix();
+		// Restore viewport
+		glPopAttrib();
 	}
 
 
 }
 void Lab1App::RenderScene()
 {
-	static float angle = 0.0f;
-	angle = angle + 0.5f;
+	// Render all the primitives in the scene.
 
-	//DrawPrimitive(_pyramid_primitive, Vec3(100.0f, 110.0f, 200.0f), Vec3(0.0f, 45.0f, 0.0f)); 
-	//DrawPrimitive(_rectangle_primitive, Vec3(320.0f, 100.0f, 0.0f), Vec3(0.0f, 0.0f, 0.0f)); 
-	//DrawPrimitive(_star_primitive, Vec3(530.0f, 100.0f, 0.0f), Vec3(0.0f, 0.0f, 0.0f)); 
-	DrawPrimitive(_cube_primitive, Vec3(0.0f, 0.0f, 0.0f), Vec3(0.0f, angle, 0.0f)); 
-	//DrawPrimitive(_sphere_primitive, Vec3(350.0f, 350.0f, 0.0f), Vec3(0.0f, 0.0f, 0.0f)); 
+	DrawPrimitive(_pyramid_primitive, Vec3(45.0f, 0.0f, 0.0f), Vec3(0.0f, 0.0f, 0.0f)); 
+	DrawPrimitive(_cube_primitive, Vec3(-45.0f, 0.0f, 0.0f), Vec3(0.0f, 0.0f, 0.0f)); 
+	DrawPrimitive(_rectangle_primitive, Vec3(-25.0f, 0.0f, -50.0f), Vec3(0.0f, 0.0f, 0.0f)); 
+	DrawPrimitive(_star_primitive, Vec3(25.0f, 0.0f, -45.0f), Vec3(0.0f, 0.0f, 0.0f)); 
+	DrawPrimitive(_sphere_primitive, Vec3(0.0f, -45.0f, 0.0f), Vec3(-90.0f, 0.0f, 0.0f)); 
 }
