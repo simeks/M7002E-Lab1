@@ -215,6 +215,7 @@ bool Lab1App::Initialize()
 	if(!InitializeSDL(800, 600))
 		return false;
 
+	SetWindowTitle("OpenGL - Lab 1");
 	SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 

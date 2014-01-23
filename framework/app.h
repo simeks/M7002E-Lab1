@@ -14,6 +14,9 @@ public:
 	/// @brief Specifies the clear color for when clearing the back buffer. 
 	void SetClearColor(float r, float g, float b, float a);
 
+	/// @brief Specifies the window title.
+	void SetWindowTitle(const char* title);
+
 protected:
 
 	/// @return True if initialization was successful, false if not.

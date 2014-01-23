@@ -50,6 +50,10 @@ void App::SetClearColor(float r, float g, float b, float a)
 {
 	glClearColor(r, g, b, a);
 }
+void App::SetWindowTitle(const char* title)
+{
+	SDL_SetWindowTitle(_window, title);
+}
 
 bool App::InitializeSDL(uint32_t window_width, uint32_t window_height)
 {
