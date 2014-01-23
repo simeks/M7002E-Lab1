@@ -67,6 +67,7 @@ Program {
 			"SDL2.lib",
 			"opengl32.lib",
 			"glew32.lib",
+			"glu32.lib",
 			Config = { "win32-*-*", "win64-*-*" } 
 		}
 	},
