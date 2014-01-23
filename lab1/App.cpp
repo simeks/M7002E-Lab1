@@ -35,15 +35,24 @@ GLuint Lab1App::CreateVertexBuffer(uint32_t size, void* vertex_data)
 void Lab1App::DrawPrimitive(const Primitive& primitive, const Vec3& position)
 {
 	glEnableClientState(GL_VERTEX_ARRAY); // Enables the use of the vertex array specified in our vertex buffer.
+	glEnableClientState(GL_COLOR_ARRAY);
 
-	glBindBuffer(GL_ARRAY_BUFFER, primitive.vertex_buffer); // Binds the vertex buffer for use.
-	
+	// Binds the vertex buffer for use.
+	glBindBuffer(GL_ARRAY_BUFFER, primitive.vertex_buffer); 
 	// Specifies the location and format of the vertex data to use when drawing.
 	glVertexPointer(3, // Each vertex contains 3 elements (x, y, z)
 					GL_FLOAT, // Our vertex data is represented as floats
 					0, // Stride set to 0 as all vertices are consecutive 
 					NULL); 
-	
+
+	// Binds the color buffer for use.
+	glBindBuffer(GL_ARRAY_BUFFER, primitive.color_buffer); 
+	// Specifies the location and format of the color data to use when drawing.
+	glColorPointer(4, // Each vertex contains 4 elements (r, g, b, a)
+					GL_FLOAT, // Our vertex data is represented as floats
+					0, // Stride set to 0 as all vertices are consecutive 
+					NULL); 
+
 	// Specify the modelview matrix as the current matrix.
 	glMatrixMode(GL_MODELVIEW);
 
@@ -59,8 +68,53 @@ void Lab1App::DrawPrimitive(const Primitive& primitive, const Vec3& position)
 	// Return the modelview matrix to its previous state
 	glPopMatrix();
 	
+	glDisableClientState(GL_COLOR_ARRAY);
 	glDisableClientState(GL_VERTEX_ARRAY); // Disables the use of the vertex array.
 }
+
+Primitive Lab1App::CreateFilledRectangle(const Vec2& size, const Color& color)
+{
+	Primitive primitive;
+	primitive.draw_mode = GL_TRIANGLES;
+
+	// The rectangle consists of two triangles, which means we have 6 vertices.
+	primitive.vertex_count = 6; 
+
+	float vertex_data[6*3]; // 6 vertices, 3 floats each (x, y, z)
+
+	int i = 0;
+
+	// Triangle 1
+	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f; // Bottom left
+	vertex_data[i++] = size.x;	vertex_data[i++] = size.y;	vertex_data[i++] = 0.0f; // Top right
+	vertex_data[i++] = size.x;	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f; // Bottom right
+
+	// Triangle 2
+	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f; // Bottom left
+	vertex_data[i++] = 0.0f;	vertex_data[i++] = size.y;	vertex_data[i++] = 0.0f; // Top left
+	vertex_data[i++] = size.x;	vertex_data[i++] = size.y;	vertex_data[i++] = 0.0f; // Top right
+
+	// Create the vertex buffer, possible optimization would be to create a shared vertex buffer for the rectangles
+	//	rather than creating a new one for each rectangle.
+	primitive.vertex_buffer = CreateVertexBuffer(3*primitive.vertex_count*sizeof(float), vertex_data);
+	
+	float color_data[6*4]; // 6 vertices, 4 floats each (r, g, b, a)
+	
+	// Fill the color data, each vertex will have the same color.
+	for(i = 0; i < 6; ++i)
+	{
+		color_data[4*i+0] = color.r; 
+		color_data[4*i+1] = color.g; 
+		color_data[4*i+2] = color.b; 
+		color_data[4*i+3] = color.a; 
+	}
+	
+	// Create the color buffer, this could (and probably should) be interleaved with the other vertex buffer but we keep it simple.
+	primitive.color_buffer = CreateVertexBuffer(4*primitive.vertex_count*sizeof(float), color_data);
+
+	return primitive;
+}
+
 bool Lab1App::Initialize()
 {
 	// Initialize SDL and create a 800x600 winodw for rendering.
@@ -77,7 +131,7 @@ bool Lab1App::Initialize()
 	vdata[i++] = 1000.0f;	vdata[i++] = 1000.0f;	vdata[i++] = 1000.0f;
 	vdata[i++] = 1000.0f;	vdata[i++] = 1000.0f;	vdata[i++] = 1000.0f;
 
-	_rectangle_vbo = CreateVertexBuffer(3*4*sizeof(float), vdata);
+	_rectangle_primitive = CreateFilledRectangle(Vec2(0.5f, 0.5f), Color(0.0f, 1.0f, 0.0f));
 
 
 	return true;
@@ -96,10 +150,5 @@ void Lab1App::Render()
 	glTranslatef(-1.0f, -1.0f, 0.0f);
 	glScalef(2.0f, 2.0f, 1.0f);
 
-	Primitive prim;
-	prim.draw_mode = GL_POINTS;
-	prim.vertex_buffer = _rectangle_vbo;
-	prim.vertex_count = 4;
-
-	DrawPrimitive(prim, Vec3(0.0f, 0.0f, 0.0f)); 
+	DrawPrimitive(_rectangle_primitive, Vec3(0.0f, 0.0f, 0.0f)); 
 }

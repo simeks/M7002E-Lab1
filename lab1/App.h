@@ -7,12 +7,22 @@
 
 struct Primitive
 {
-	GLuint vertex_buffer;
+	GLuint vertex_buffer; // VBO holding the vertex positions. Expecting the element format: float x, y, z
+	GLuint color_buffer; // VBO holding the vertex colors. Expecting the element format: float r, g, b, a
+
 	uint32_t vertex_count;
 
 	GLenum draw_mode; // Specifies draw mode, e.g. GL_POINTS, GL_TRIANGLES, etc.
 };
 
+struct Color
+{
+	Color(float _r = 0.0f, float _g = 0.0f, float _b = 0.0f, float _a = 1.0f) 
+		: r(_r), g(_g), b(_b), a(_a)
+	{}
+
+	float r, g, b, a;
+};
 
 class Lab1App : public App
 {
@@ -26,7 +36,13 @@ public:
 	///						NULL means the buffer will be empty.
 	GLuint CreateVertexBuffer(uint32_t size, void* vertex_data);
 
+	/// @brief Draws the specified primitive at the specified position.
 	void DrawPrimitive(const Primitive& primitive, const Vec3& position);
+
+	/// @brief Creates a filled rectangle primitive.
+	/// @param size The size of the rectangle.
+	/// @param color The color of the rectangle.
+	Primitive CreateFilledRectangle(const Vec2& size, const Color& color);
 
 protected:
 	bool Initialize();
@@ -36,9 +52,7 @@ protected:
 	void Render();
 	
 private:
-	GLuint _pyramid_vbo; // Shared vertex buffer object for the pyramid shape.
-	GLuint _rectangle_vbo; // Shared vertex buffer object for the rectangle shape.
-	GLuint _star_vbo; // Shared vertex buffer object for the star shape.
+	Primitive _rectangle_primitive;
 
 
 };
