@@ -1,6 +1,7 @@
 #ifndef __FRAMEWORK_MATH_H__
 #define __FRAMEWORK_MATH_H__
 
+#include <math.h>
 
 // Constants
 #define MATH_PI 3.14159265358979323846
