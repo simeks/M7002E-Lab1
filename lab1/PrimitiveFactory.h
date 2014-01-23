@@ -43,6 +43,16 @@ public:
 	/// @param color The color of the star.
 	Primitive CreateFilledStar(const Vec2& size, const Color& color);
 
+	/// @brief Creates a cube.
+	/// @param size The size of the cube.
+	/// @param color The color of the cube.
+	Primitive CreateCube(const Vec3& size, const Color& color);
+
+	/// @brief Creates an outlined sphere.
+	/// @param size The size of the cube.
+	/// @param color The color of the cube.
+	Primitive CreateSphere(float radius, const Color& color);
+
 private:
 	/// @brief Creates a new vertex buffer.
 	/// @param size The total size of the buffer in bytes.

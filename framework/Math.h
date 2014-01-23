@@ -2,6 +2,12 @@
 #define __FRAMEWORK_MATH_H__
 
 
+// Constants
+#define MATH_PI 3.14159265358979323846
+#define MATH_TWO_PI (MATH_PI * 2.0)
+#define MATH_HALF_PI (MATH_PI * 0.5)
+
+
 /// @brief Two-dimensional vector.
 struct Vec2
 {

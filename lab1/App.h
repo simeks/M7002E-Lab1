@@ -26,8 +26,10 @@ private:
 	PrimitiveFactory _primitive_factory;
 
 	Primitive _rectangle_primitive;
-	Primitive _pyramid_primtive;
-	Primitive _star_primtive;
+	Primitive _pyramid_primitive;
+	Primitive _star_primitive;
+	Primitive _cube_primitive;
+	Primitive _sphere_primitive;
 
 };
 

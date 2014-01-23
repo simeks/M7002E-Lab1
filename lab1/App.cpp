@@ -58,17 +58,15 @@ bool Lab1App::Initialize()
 	SetWindowTitle("OpenGL - Lab 1");
 	SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
+	// Setup projection matrix
+	glMatrixMode(GL_PROJECTION);
+	glOrtho(0.0, 800.0, 0.0, 600.0, 0.0f, -500.0);
 
-	float vdata[3*4];
-	int i = 0;
-	vdata[i++] = 0.5f;	vdata[i++] = 0.5f;	vdata[i++] = 0.0f;
-	vdata[i++] = 1000.0f;	vdata[i++] = 1000.0f;	vdata[i++] = 1000.0f;
-	vdata[i++] = 1000.0f;	vdata[i++] = 1000.0f;	vdata[i++] = 1000.0f;
-	vdata[i++] = 1000.0f;	vdata[i++] = 1000.0f;	vdata[i++] = 1000.0f;
-	
-	_pyramid_primtive = _primitive_factory.CreatePyramid(Vec3(0.25f, 0.25f, 0.25f), Color(1.0f, 0.0f, 0.0f));
-	_rectangle_primitive = _primitive_factory.CreateFilledRectangle(Vec2(0.5f, 0.5f), Color(0.0f, 0.0f, 1.0f));
-	_star_primtive = _primitive_factory.CreateFilledStar(Vec2(0.25f, 0.25f), Color(0.0f, 1.0f, 0.0f));
+	_pyramid_primitive = _primitive_factory.CreatePyramid(Vec3(200.0f, 200.0f, 200.0f), Color(1.0f, 0.0f, 0.0f));
+	_rectangle_primitive = _primitive_factory.CreateFilledRectangle(Vec2(200.0f, 200.0f), Color(0.0f, 0.0f, 1.0f));
+	_star_primitive = _primitive_factory.CreateFilledStar(Vec2(200.0f, 200.0f), Color(0.0f, 1.0f, 0.0f));
+	_cube_primitive = _primitive_factory.CreateCube(Vec3(100.0f, 100.0f, 100.0f), Color(1.0f, 0.0f, 1.0f));
+	_sphere_primitive = _primitive_factory.CreateSphere(100.0f, Color(1.0f, 1.0f, 1.0f));
 
 	return true;
 }
@@ -81,13 +79,11 @@ void Lab1App::Render()
 	// Reset the modelview matrix
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-
-	// Transform coordinates from [-1.0f, 1.0f] to [0, 1.0f]
-	glTranslatef(-1.0f, -1.0f, 0.0f);
-	glScalef(2.0f, 2.0f, 1.0f);
 	
-	DrawPrimitive(_pyramid_primtive, Vec3(0.5f, 0.0f, 0.0f)); 
-	DrawPrimitive(_rectangle_primitive, Vec3(0.0f, 0.0f, 0.0f)); 
-	DrawPrimitive(_star_primtive, Vec3(0.75f, 0.0f, 0.0f)); 
+	DrawPrimitive(_pyramid_primitive, Vec3(10.0f, 10.0f, 0.0f)); 
+	DrawPrimitive(_rectangle_primitive, Vec3(220.0f, 0.0f, 0.0f)); 
+	DrawPrimitive(_star_primitive, Vec3(430.0f, 0.0f, 0.0f)); 
+	DrawPrimitive(_cube_primitive, Vec3(10.0f, 250.0f, 0.0f)); 
+	DrawPrimitive(_sphere_primitive, Vec3(350.0f, 350.0f, 0.0f)); 
 
 }
