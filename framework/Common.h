@@ -13,4 +13,10 @@
 #include "Debug.h"
 #include "Math.h"
 
+#ifdef PLATFORM_MACOSX
+#include <OpenGL/gl.h> // No GLEW on osx
+#else
+#include <gl/glew.h>
+#endif
+
 #endif // __COMMON_H__

@@ -3,7 +3,6 @@
 
 #include <framework/App.h>
 
-#include <GL/glew.h>
 
 struct Primitive
 {
