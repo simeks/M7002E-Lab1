@@ -18,29 +18,33 @@ Primitive PrimitiveFactory::CreatePyramid(const Vec3& size, const Color& color)
 	primitive.vertex_count = 11; 
 
 	float vertex_data[11*3]; // 6 vertices, 3 floats each (x, y, z)
-
 	int i = 0;
 
+	Vec3 half_size;
+	half_size.x = size.x * 0.5f;
+	half_size.y = size.y * 0.5f;
+	half_size.z = size.z * 0.5f;
+
 	// The bottom
-	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f; // bottom 1
-	vertex_data[i++] = size.x;	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f; // bottom 2
-	vertex_data[i++] = size.x;	vertex_data[i++] = 0.0f;	vertex_data[i++] = size.z; // bottom 3
-	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f;	vertex_data[i++] = size.z; // bottom 4
-	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f; // bottom 1
+	vertex_data[i++] = -half_size.x;	vertex_data[i++] = -half_size.y;	vertex_data[i++] = -half_size.z; // bottom 1
+	vertex_data[i++] = half_size.x;		vertex_data[i++] = -half_size.y;	vertex_data[i++] = -half_size.z; // bottom 2
+	vertex_data[i++] = half_size.x;		vertex_data[i++] = -half_size.y;	vertex_data[i++] = half_size.z; // bottom 3
+	vertex_data[i++] = -half_size.x;	vertex_data[i++] = -half_size.y;	vertex_data[i++] = half_size.z; // bottom 4
+	vertex_data[i++] = -half_size.x;	vertex_data[i++] = -half_size.y;	vertex_data[i++] = -half_size.z; // bottom 1
 
 	// Side 4 (bottom 1 -> Top)
-	vertex_data[i++] = size.x * 0.5f; vertex_data[i++] = size.y; vertex_data[i++] = size.z * 0.5f; // Top
+	vertex_data[i++] = 0.0f;			vertex_data[i++] = half_size.y;		vertex_data[i++] = 0.0f; // Top
 
 	// Side 3 (Top -> bottom 2 -> Top)
-	vertex_data[i++] = size.x;	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f; // bottom 2
-	vertex_data[i++] = size.x * 0.5f; vertex_data[i++] = size.y; vertex_data[i++] = size.z * 0.5f; // Top
+	vertex_data[i++] = half_size.x;		vertex_data[i++] = -half_size.y;	vertex_data[i++] = -half_size.z; // bottom 2
+	vertex_data[i++] = 0.0f;			vertex_data[i++] = half_size.y;		vertex_data[i++] = 0.0f; // Top
 
 	// Side 2 (Top -> bottom 3 -> Top)
-	vertex_data[i++] = size.x;	vertex_data[i++] = 0.0f;	vertex_data[i++] = size.z; // bottom 3
-	vertex_data[i++] = size.x * 0.5f; vertex_data[i++] = size.y; vertex_data[i++] = size.z * 0.5f; // Top
+	vertex_data[i++] = half_size.x;		vertex_data[i++] = -half_size.y;	vertex_data[i++] = half_size.z; // bottom 3
+	vertex_data[i++] = 0.0f;			vertex_data[i++] = half_size.y;		vertex_data[i++] = 0.0f; // Top
 	
 	// Side 1 (Top -> bottom 4)
-	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f;	vertex_data[i++] = size.z; // bottom 4
+	vertex_data[i++] = -half_size.x;	vertex_data[i++] = -half_size.y;	vertex_data[i++] = half_size.z; // bottom 4
 
 	// Create the vertex buffer, possible optimization would be to create a shared vertex buffer for the rectangles
 	//	rather than creating a new one for each rectangle.
@@ -71,18 +75,21 @@ Primitive PrimitiveFactory::CreateFilledRectangle(const Vec2& size, const Color&
 	primitive.vertex_count = 6; 
 
 	float vertex_data[6*3]; // 6 vertices, 3 floats each (x, y, z)
-
 	int i = 0;
 
+	Vec2 half_size;
+	half_size.x = size.x * 0.5f;
+	half_size.y = size.y * 0.5f;
+
 	// Triangle 1
-	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f; // Bottom left
-	vertex_data[i++] = size.x;	vertex_data[i++] = size.y;	vertex_data[i++] = 0.0f; // Top right
-	vertex_data[i++] = size.x;	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f; // Bottom right
+	vertex_data[i++] = -half_size.x;	vertex_data[i++] = -half_size.y;	vertex_data[i++] = 0.0f; // Bottom left
+	vertex_data[i++] = half_size.x;		vertex_data[i++] = -half_size.y;	vertex_data[i++] = 0.0f; // Bottom right
+	vertex_data[i++] = half_size.x;		vertex_data[i++] = half_size.y;		vertex_data[i++] = 0.0f; // Top right
 
 	// Triangle 2
-	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f; // Bottom left
-	vertex_data[i++] = 0.0f;	vertex_data[i++] = size.y;	vertex_data[i++] = 0.0f; // Top left
-	vertex_data[i++] = size.x;	vertex_data[i++] = size.y;	vertex_data[i++] = 0.0f; // Top right
+	vertex_data[i++] = -half_size.x;	vertex_data[i++] = -half_size.y;	vertex_data[i++] = 0.0f; // Bottom left
+	vertex_data[i++] = half_size.x;		vertex_data[i++] = half_size.y;		vertex_data[i++] = 0.0f; // Top right
+	vertex_data[i++] = -half_size.x;	vertex_data[i++] = half_size.y;		vertex_data[i++] = 0.0f; // Top left
 
 	// Create the vertex buffer, possible optimization would be to create a shared vertex buffer for the rectangles
 	//	rather than creating a new one for each rectangle.
@@ -113,18 +120,22 @@ Primitive PrimitiveFactory::CreateFilledStar(const Vec2& size, const Color& colo
 	primitive.vertex_count = 6; 
 
 	float vertex_data[6*3]; // 6 vertices, 3 floats each (x, y, z)
-
 	int i = 0;
 
+	Vec2 half_size;
+	half_size.x = size.x * 0.5f;
+	half_size.y = size.y * 0.5f;
+	
+	
 	// Triangle 1
-	vertex_data[i++] = 0.0f;		vertex_data[i++] = size.y*0.25f;	vertex_data[i++] = 0.0f;
-	vertex_data[i++] = size.x*0.5f;	vertex_data[i++] = size.y;			vertex_data[i++] = 0.0f; 
-	vertex_data[i++] = size.x;		vertex_data[i++] = size.y*0.25f;	vertex_data[i++] = 0.0f; 
+	vertex_data[i++] = -half_size.x;	vertex_data[i++] = half_size.y*0.5f;	vertex_data[i++] = 0.0f;
+	vertex_data[i++] = 0.0f;			vertex_data[i++] = -half_size.y;		vertex_data[i++] = 0.0f; 
+	vertex_data[i++] = half_size.x;		vertex_data[i++] = half_size.y*0.5f;	vertex_data[i++] = 0.0f; 
 
 	// Triangle 2
-	vertex_data[i++] = 0.0f;		vertex_data[i++] = size.y*0.75f;	vertex_data[i++] = 0.0f;
-	vertex_data[i++] = size.x;		vertex_data[i++] = size.y*0.75f;	vertex_data[i++] = 0.0f; 
-	vertex_data[i++] = size.x*0.5f;	vertex_data[i++] = 0.0f;			vertex_data[i++] = 0.0f; 
+	vertex_data[i++] = -half_size.x;	vertex_data[i++] = -half_size.y*0.5f;	vertex_data[i++] = 0.0f;
+	vertex_data[i++] = half_size.x;		vertex_data[i++] = -half_size.y*0.5f;	vertex_data[i++] = 0.0f; 
+	vertex_data[i++] = 0.0f;			vertex_data[i++] = half_size.y;			vertex_data[i++] = 0.0f; 
 
 	// Create the vertex buffer, possible optimization would be to create a shared vertex buffer for the stars
 	//	rather than creating a new one for each star.
@@ -150,78 +161,68 @@ Primitive PrimitiveFactory::CreateFilledStar(const Vec2& size, const Color& colo
 Primitive PrimitiveFactory::CreateCube(const Vec3& size, const Color& color)
 {
 	Primitive primitive;
-	primitive.draw_mode = GL_TRIANGLES;
+	primitive.draw_mode = GL_LINES;
 
-	// The cube consists of six rectangles (six faces), which means we have 6*6 vertices.
-	primitive.vertex_count = 36; 
+	// The cube consists of 12 lines => 24 vertices.
+	primitive.vertex_count = 24; 
 
-	float vertex_data[36*3]; // 6 vertices, 3 floats each (x, y, z)
-
+	float vertex_data[24*3]; // 6 vertices, 3 floats each (x, y, z)
 	int i = 0;
 
-	// Face 1 (Front)
-	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f; // Bottom left
-	vertex_data[i++] = size.x;	vertex_data[i++] = size.y;	vertex_data[i++] = 0.0f; // Top right
-	vertex_data[i++] = size.x;	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f; // Bottom right
-
-	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f; // Bottom left
-	vertex_data[i++] = 0.0f;	vertex_data[i++] = size.y;	vertex_data[i++] = 0.0f; // Top left
-	vertex_data[i++] = size.x;	vertex_data[i++] = size.y;	vertex_data[i++] = 0.0f; // Top right
-
-	// Face 2 (Back)
-	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f;	vertex_data[i++] = size.z; // Bottom left
-	vertex_data[i++] = size.x;	vertex_data[i++] = 0.0f;	vertex_data[i++] = size.z; // Bottom right
-	vertex_data[i++] = size.x;	vertex_data[i++] = size.y;	vertex_data[i++] = size.z; // Top right
-
-	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f;	vertex_data[i++] = size.z; // Bottom left
-	vertex_data[i++] = size.x;	vertex_data[i++] = size.y;	vertex_data[i++] = size.z; // Top right
-	vertex_data[i++] = 0.0f;	vertex_data[i++] = size.y;	vertex_data[i++] = size.z; // Top left
+	Vec3 half_size;
+	half_size.x = size.x * 0.5f;
+	half_size.y = size.y * 0.5f;
+	half_size.z = size.z * 0.5f;
 
 	// Face 3 (Top)
-	vertex_data[i++] = 0.0f;	vertex_data[i++] = size.y;	vertex_data[i++] = 0.0f; // Bottom left
-	vertex_data[i++] = size.x;	vertex_data[i++] = size.y;	vertex_data[i++] = size.z; // Top right
-	vertex_data[i++] = size.x;	vertex_data[i++] = size.y;	vertex_data[i++] = 0.0f; // Bottom right
-
-	vertex_data[i++] = 0.0f;	vertex_data[i++] = size.y;	vertex_data[i++] = 0.0f; // Bottom left
-	vertex_data[i++] = 0.0f;	vertex_data[i++] = size.y;	vertex_data[i++] = size.z; // Top left
-	vertex_data[i++] = size.x;	vertex_data[i++] = size.y;	vertex_data[i++] = size.z; // Top right
+	vertex_data[i++] = -half_size.x;	vertex_data[i++] = half_size.y;		vertex_data[i++] = -half_size.z; // Bottom left
+	vertex_data[i++] = half_size.x;		vertex_data[i++] = half_size.y;		vertex_data[i++] = -half_size.z; // Bottom right
+	
+	vertex_data[i++] = half_size.x;		vertex_data[i++] = half_size.y;		vertex_data[i++] = -half_size.z; // Bottom right
+	vertex_data[i++] = half_size.x;		vertex_data[i++] = half_size.y;		vertex_data[i++] = half_size.z; // Top right
+	
+	vertex_data[i++] = half_size.x;		vertex_data[i++] = half_size.y;		vertex_data[i++] = half_size.z; // Top right
+	vertex_data[i++] = -half_size.x;	vertex_data[i++] = half_size.y;		vertex_data[i++] = half_size.z; // Top left
+	
+	vertex_data[i++] = -half_size.x;	vertex_data[i++] = half_size.y;		vertex_data[i++] = half_size.z; // Top left
+	vertex_data[i++] = -half_size.x;	vertex_data[i++] = half_size.y;		vertex_data[i++] = -half_size.z; // Bottom left
 
 	// Face 4 (Bottom)
-	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f; // Bottom left
-	vertex_data[i++] = size.x;	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f; // Bottom right
-	vertex_data[i++] = size.x;	vertex_data[i++] = 0.0f;	vertex_data[i++] = size.z; // Top right
+	vertex_data[i++] = -half_size.x;	vertex_data[i++] = -half_size.y;	vertex_data[i++] = -half_size.z; // Bottom left
+	vertex_data[i++] = half_size.x;		vertex_data[i++] = -half_size.y;	vertex_data[i++] = -half_size.z; // Bottom right
+	
+	vertex_data[i++] = half_size.x;		vertex_data[i++] = -half_size.y;	vertex_data[i++] = -half_size.z; // Bottom right
+	vertex_data[i++] = half_size.x;		vertex_data[i++] = -half_size.y;	vertex_data[i++] = half_size.z; // Top right
+	
+	vertex_data[i++] = half_size.x;		vertex_data[i++] = -half_size.y;	vertex_data[i++] = half_size.z; // Top right
+	vertex_data[i++] = -half_size.x;	vertex_data[i++] = -half_size.y;	vertex_data[i++] = half_size.z; // Top left
+	
+	vertex_data[i++] = -half_size.x;	vertex_data[i++] = -half_size.y;	vertex_data[i++] = half_size.z; // Top left
+	vertex_data[i++] = -half_size.x;	vertex_data[i++] = -half_size.y;	vertex_data[i++] = -half_size.z; // Bottom left
 
-	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f; // Bottom left
-	vertex_data[i++] = size.x;	vertex_data[i++] = 0.0f;	vertex_data[i++] = size.z; // Top right
-	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f;	vertex_data[i++] = size.z; // Top left
+	// Connect top and bottom
+	vertex_data[i++] = -half_size.x;	vertex_data[i++] = half_size.y;		vertex_data[i++] = -half_size.z; // Bottom left (Top)
+	vertex_data[i++] = -half_size.x;	vertex_data[i++] = -half_size.y;	vertex_data[i++] = -half_size.z; // Bottom left (Bottom)
+	
+	vertex_data[i++] = half_size.x;		vertex_data[i++] = half_size.y;		vertex_data[i++] = -half_size.z; // Bottom right (Top)
+	vertex_data[i++] = half_size.x;		vertex_data[i++] = -half_size.y;	vertex_data[i++] = -half_size.z; // Bottom right (Bottom)
 
-	// Face 5 (Left)
-	vertex_data[i++] = size.x;	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f; // Bottom left
-	vertex_data[i++] = size.x;	vertex_data[i++] = size.y;	vertex_data[i++] = size.z; // Top right
-	vertex_data[i++] = size.x;	vertex_data[i++] = 0.0f;	vertex_data[i++] = size.z; // Bottom right
+	vertex_data[i++] = half_size.x;		vertex_data[i++] = half_size.y;		vertex_data[i++] = half_size.z; // Top right (Top)
+	vertex_data[i++] = half_size.x;		vertex_data[i++] = -half_size.y;	vertex_data[i++] = half_size.z; // Top right (Bottom)
 
-	vertex_data[i++] = size.x;	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f; // Bottom left
-	vertex_data[i++] = size.x;	vertex_data[i++] = size.y;	vertex_data[i++] = 0.0f; // Top left
-	vertex_data[i++] = size.x;	vertex_data[i++] = size.y;	vertex_data[i++] = size.z; // Top right
+	vertex_data[i++] = -half_size.x;	vertex_data[i++] = half_size.y;		vertex_data[i++] = half_size.z; // Top left (Top)
+	vertex_data[i++] = -half_size.x;	vertex_data[i++] = -half_size.y;	vertex_data[i++] = half_size.z; // Top left (Bottom)
 
-	// Face 6
-	vertex_data[i++] = size.x;	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f; // Bottom left
-	vertex_data[i++] = size.x;	vertex_data[i++] = 0.0f;	vertex_data[i++] = size.z; // Bottom right
-	vertex_data[i++] = size.x;	vertex_data[i++] = size.y;	vertex_data[i++] = size.z; // Top right
-
-	vertex_data[i++] = size.x;	vertex_data[i++] = 0.0f;	vertex_data[i++] = 0.0f; // Bottom left
-	vertex_data[i++] = size.x;	vertex_data[i++] = size.y;	vertex_data[i++] = size.z; // Top right
-	vertex_data[i++] = size.x;	vertex_data[i++] = size.y;	vertex_data[i++] = 0.0f; // Top left
 
 
 	// Create the vertex buffer, possible optimization would be to create a shared vertex buffer for the rectangles
 	//	rather than creating a new one for each rectangle.
 	primitive.vertex_buffer = CreateVertexBuffer(3*primitive.vertex_count*sizeof(float), vertex_data);
 	
-	float color_data[36*4]; // 6 vertices, 4 floats each (r, g, b, a)
+	float color_data[24*4]; // 24 vertices, 4 floats each (r, g, b, a)
 
 	// Fill the color data, each vertex will have the same color.
-	for(i = 0; i < 36; ++i)
+	for(i = 0; i < 24; ++i)
 	{
 		color_data[4*i+0] = color.r; 
 		color_data[4*i+1] = color.g; 
