@@ -1,7 +1,6 @@
 #include <framework/Common.h>
 #include "App.h"
 
-#include <GL/glew.h>
 
 Lab1App::Lab1App()
 {
@@ -43,7 +42,7 @@ void Lab1App::DrawPrimitive(const Primitive& primitive, const Vec3& position)
 	glVertexPointer(3, // Each vertex contains 3 elements (x, y, z)
 					GL_FLOAT, // Our vertex data is represented as floats
 					0, // Stride set to 0 as all vertices are consecutive 
-					NULL); 
+					0); 
 
 	// Binds the color buffer for use.
 	glBindBuffer(GL_ARRAY_BUFFER, primitive.color_buffer); 
@@ -51,7 +50,7 @@ void Lab1App::DrawPrimitive(const Primitive& primitive, const Vec3& position)
 	glColorPointer(4, // Each vertex contains 4 elements (r, g, b, a)
 					GL_FLOAT, // Our vertex data is represented as floats
 					0, // Stride set to 0 as all vertices are consecutive 
-					NULL); 
+					0); 
 
 	// Specify the modelview matrix as the current matrix.
 	glMatrixMode(GL_MODELVIEW);
@@ -249,4 +248,5 @@ void Lab1App::Render()
 	DrawPrimitive(_pyramid_primtive, Vec3(0.5f, 0.0f, 0.0f)); 
 	DrawPrimitive(_rectangle_primitive, Vec3(0.0f, 0.0f, 0.0f)); 
 	DrawPrimitive(_star_primtive, Vec3(0.75f, 0.0f, 0.0f)); 
+
 }
