@@ -1,5 +1,5 @@
-#include <framework/common.h>
-#include "lab_app.h"
+#include <framework/Common.h>
+#include "App.h"
 
 
 #ifdef PLATFORM_WIN32

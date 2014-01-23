@@ -1,8 +1,9 @@
-#include "common.h"
+#include "Common.h"
 
-#include "debug.h"
+#include "Debug.h"
 
 #include <stdarg.h>
+#include <stdio.h>
 
 void debug::Printf(const char* fmt, ...)
 {

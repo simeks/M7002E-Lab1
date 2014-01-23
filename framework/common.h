@@ -10,6 +10,7 @@
 
 #include <stdint.h>
 
-#include "debug.h"
+#include "Debug.h"
+#include "Math.h"
 
 #endif // __COMMON_H__
